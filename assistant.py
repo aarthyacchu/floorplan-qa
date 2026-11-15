@@ -40,6 +40,12 @@ RULES (strict):
 
 def _load_key():
     key = os.environ.get("GEMINI_API_KEY") or os.environ.get("GOOGLE_API_KEY")
+    if not key:
+        try:
+            import streamlit as st
+            key = st.secrets.get("GEMINI_API_KEY") or st.secrets.get("GOOGLE_API_KEY")
+        except Exception:
+            pass
     env = Path(__file__).with_name(".env")
     if not key and env.exists():
         for line in env.read_text().splitlines():
